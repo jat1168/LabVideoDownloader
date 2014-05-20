@@ -11,14 +11,16 @@ public class Main {
 
         
     	if (args == null || args.length != 2) {
-            logger.warn("It needs two args: filename and video-url");
+            logger.warn("下載程式需要兩個參數: '檔案名稱、youtube網址!!");
             return;
         }
 
         String filename = args[0];
+        logger.info("檔案名稱 : " + filename);
         String youtubeUrl = args[1];
-//	String youtubeUrl = "https://www.youtube.com/watch?v=o9IVocUaOPY";
-//	String filename = "d:/test.mp4";
+        logger.info("youtube網址 : " + youtubeUrl);
+	//	String youtubeUrl = "https://www.youtube.com/watch?v=o9IVocUaOPY";
+	//	String filename = "d:/test.mp4";
         VideoUrlParser parser = new VideoUrlParser();
         String url = parser.parse(youtubeUrl);
 

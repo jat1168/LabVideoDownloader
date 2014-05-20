@@ -12,7 +12,11 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.RandomAccess;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class VideoDownloader {
+	static Log logger = LogFactory.getLog(VideoDownloader.class);
 
     /**
      * Saves the content of the {@code url} to a file with the name
@@ -28,13 +32,19 @@ public class VideoDownloader {
 	    	
 			long range = 0;
 			File file = new File(filename);
+			long fileSize = getFileSize(url);
+			if(file.exists()){				
+				range = file.length();			
 			
-			if(file.exists()){
-				range = file.length();
+				if(fileSize == range){
+					if(file.delete()){
+						logger.info("檔案已下載完成，刪除既有檔案，重新下載!!");
+						range = 0;
+					}
+				}else{
+					logger.info("檔案未下載完成，進行續傳!!");
+				}
 			}
-			
-			System.out.println("range : " + range);
-			//System.out.println("getFileSize : " + getFileSize(url));
 	    	HttpURLConnection httpConnection = (HttpURLConnection)fileUrl.openConnection(); 
 	    	httpConnection.setRequestProperty("User-Agent","NetFox");
 	    	httpConnection.setRequestProperty("RANGE","bytes=" + range + "-"); 
@@ -42,22 +52,22 @@ public class VideoDownloader {
 	    	InputStream input = httpConnection.getInputStream(); 
 	    	
 	    	
-	    	RandomAccessFile oSavedFile = new RandomAccessFile(filename,"rw"); 
+	    	RandomAccessFile savedFile = new RandomAccessFile(filename,"rw"); 
 	    	long nPos = range; 
-	    	oSavedFile.seek(nPos); 
+	    	savedFile.seek(nPos); 
 	    	byte[] b = new byte[1024]; 
 	    	int nRead; 
+	    	logger.info("檔案下載中!!");
 	    	while((nRead=input.read(b,0,1024)) > 0) 
 	    	{ 
-	    		oSavedFile.write(b,0,nRead); 
+	    		savedFile.write(b,0,nRead); 
+	    		
 	    	}
-	    	System.out.println("下載完成!!");
+	    	logger.info("下載完成!!");
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("URL異常!!", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("IO異常!!", e);
 		} 
     }
     
@@ -72,28 +82,26 @@ public class VideoDownloader {
 			
 			if(responseCode == 200){
 				String header;
+				//尋找檔案長度
 				for(int i=1;;i++) 
 				{ 
-				 //DataInputStream in = new DataInputStream(httpConnection.getInputStream ()); 
-				 //Utility.log(in.readLine()); 
-				 header=httpConnection.getHeaderFieldKey(i); 
-					 if(header!=null) 
-					 { 
-						 if(header.equals("Content-Length")) 
-						 { 
-							 fileLength = Long.parseLong(httpConnection.getHeaderField(header));
-						 }
-					 }
+					header=httpConnection.getHeaderFieldKey(i); 
+					if(header!=null) 
+					{ 
+						if(header.equals("Content-Length")) 
+						{ 
+							fileLength = Long.parseLong(httpConnection.getHeaderField(header));
+							break;
+						}
+					}
 				}				
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("URL異常!!", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-    	 return fileLength;
+			logger.error("IO異常!!", e);
+		}
+		return fileLength;
     }
 
 }
