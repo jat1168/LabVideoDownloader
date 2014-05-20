@@ -8,6 +8,7 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
+    <property name="dist" location="dist"/>
     <path id="VideoDownloader.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/commons-lang-2.6.jar"/>
@@ -27,7 +28,8 @@
         <delete dir="bin"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
+    <!--target depends="build-subprojects,build-project" name="build"/-->
+    <target depends="dist" name="build"/>
     <target name="build-subprojects"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
@@ -42,5 +44,16 @@
             <arg line="d:/test.mp4 https://www.youtube.com/watch?v=o9IVocUaOPY"/>
             <classpath refid="VideoDownloader.classpath"/>
         </java>
-    </target>
+    </target>    
+	 <target name="dist" depends="build-subprojects,build-project" description="generate the distribution" >
+	 	<copy includeemptydirs="false" todir="bin">
+			<fileset dir="lib"></fileset>
+		</copy>
+	 	<jar jarfile="${dist}/${ant.project.name}.jar"  basedir="bin">
+	 	    <zipgroupfileset dir="bin" includes="*.jar" excludes=""/>
+	 	    <manifest>
+	 	        <attribute name="Main-Class" value="com.demo.Main"/>
+	 	    </manifest>
+		</jar>
+	  </target>
 </project>

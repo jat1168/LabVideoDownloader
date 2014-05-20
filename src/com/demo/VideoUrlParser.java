@@ -185,7 +185,8 @@ public class VideoUrlParser {
         	int end = jsContent.indexOf("*/");
         	String replaceStr = jsContent.substring(start, end+2);
         	jsContent = jsContent.replace(replaceStr, "");
-        	jsContent = jsContent.replace("parseTitle(rdataArray);", "parseTitle(rdataArray);youTubeUrl = unescape(url_classic[0].fmt_url) + '&signature=' + url_classic[0].fmt_sig + '&title=' + title;");
+        	//jsContent = jsContent.replace("parseTitle(rdataArray);", "parseTitle(rdataArray);youTubeUrl = unescape(url_classic[0].fmt_url) + '&signature=' + url_classic[0].fmt_sig + '&title=' + title;");
+        	jsContent = jsContent.replace("if(dllinks.length > 0){", "if(youTubeUrl == ''){youTubeUrl = unescape(url_classic[i].fmt_url) + '&signature=' + url_classic[i].fmt_sig + '&title=' + title;}if(dllinks.length > 0){");
         	//將js載入script engine
         	engine.eval(jsContent);
         	        	
