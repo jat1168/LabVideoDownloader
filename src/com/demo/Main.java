@@ -9,14 +9,16 @@ public class Main {
 
     public static void main(String[] args) {
 
-        if (args == null || args.length != 2) {
+        
+    	if (args == null || args.length != 2) {
             logger.warn("It needs two args: filename and video-url");
             return;
         }
 
         String filename = args[0];
         String youtubeUrl = args[1];
-
+//	String youtubeUrl = "https://www.youtube.com/watch?v=o9IVocUaOPY";
+//	String filename = "d:/test.mp4";
         VideoUrlParser parser = new VideoUrlParser();
         String url = parser.parse(youtubeUrl);
 
