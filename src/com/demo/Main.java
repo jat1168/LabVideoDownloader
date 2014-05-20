@@ -19,8 +19,6 @@ public class Main {
         logger.info("檔案名稱 : " + filename);
         String youtubeUrl = args[1];
         logger.info("youtube網址 : " + youtubeUrl);
-	//	String youtubeUrl = "https://www.youtube.com/watch?v=o9IVocUaOPY";
-	//	String filename = "d:/test.mp4";
         VideoUrlParser parser = new VideoUrlParser();
         String url = parser.parse(youtubeUrl);
 

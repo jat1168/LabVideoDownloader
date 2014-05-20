@@ -163,6 +163,12 @@ public class VideoUrlParser {
 		return fileContent;
 	}
 
+    /**
+     * use video info content to parse youtube download url
+     * 
+     * @param videoInfoContent
+     * @return youTubeUrl or null
+     */
     private String getYouTubeUrl(String videoInfoContent){
     	String youTubeUrl = null;
     	//建立script engine

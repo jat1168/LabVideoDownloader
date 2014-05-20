@@ -71,9 +71,15 @@ public class VideoDownloader {
 		} 
     }
     
+    /**
+     * get download file size
+     * 
+     * @param urlStr
+     * @return file size
+     */
     private long getFileSize(String urlStr){
-    	long fileLength = -1; 
-    	 URL url;
+    	long fileSize = -1; 
+    	URL url;
 		try {
 			url = new URL(urlStr);
 			HttpURLConnection httpConnection = (HttpURLConnection)url.openConnection ();
@@ -90,7 +96,7 @@ public class VideoDownloader {
 					{ 
 						if(header.equals("Content-Length")) 
 						{ 
-							fileLength = Long.parseLong(httpConnection.getHeaderField(header));
+							fileSize = Long.parseLong(httpConnection.getHeaderField(header));
 							break;
 						}
 					}
@@ -101,7 +107,7 @@ public class VideoDownloader {
 		} catch (IOException e) {
 			logger.error("IO異常!!", e);
 		}
-		return fileLength;
+		return fileSize;
     }
 
 }
